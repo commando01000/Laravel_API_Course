@@ -20,7 +20,7 @@ class AuthController extends Controller
             return $this->successResponse(
                 'Successfully logged in',
                 [
-                    'token' => $user->createToken('auth_token' . $user->email)->plainTextToken,
+                    'token' => $user->createToken('auth_token' . $user->email, ['*'], now()->addDays(1))->plainTextToken,
                 ],
             );
         } else {
@@ -30,5 +30,6 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
+        return $this->successResponse();
     }
 }
