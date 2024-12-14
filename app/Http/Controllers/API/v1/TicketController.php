@@ -6,15 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use App\Http\Requests\API\v1\StoreTicketRequest;
 use App\Http\Requests\API\v1\UpdateTicketRequest;
+use App\Traits\ApiResponses;
 
 class TicketController extends Controller
 {
+    use ApiResponses;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Ticket::all();
+        return $this->successResponse('Success', Ticket::all());
     }
 
     /**
