@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use App\Http\Requests\API\v1\StoreTicketRequest;
 use App\Http\Requests\API\v1\UpdateTicketRequest;
+use App\Http\Resources\v1\TicketResource;
 use App\Traits\ApiResponses;
 
 class TicketController extends Controller
@@ -16,7 +17,7 @@ class TicketController extends Controller
      */
     public function index()
     {
-        return $this->successResponse('Success', Ticket::all());
+        return TicketResource::collection(Ticket::all());
     }
 
     /**
@@ -36,7 +37,7 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        //
+        return new TicketResource($ticket);
     }
 
     /**
