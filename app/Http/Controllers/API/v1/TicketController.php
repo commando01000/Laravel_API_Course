@@ -3,21 +3,27 @@
 namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Filters\v1\TicketFilters;
 use App\Models\Ticket;
 use App\Http\Requests\API\v1\StoreTicketRequest;
 use App\Http\Requests\API\v1\UpdateTicketRequest;
 use App\Http\Resources\v1\TicketResource;
 use App\Traits\ApiResponses;
 
-class TicketController extends Controller
+class TicketController extends APIController
 {
     use ApiResponses;
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(TicketFilters $filters)
     {
-        return TicketResource::collection(Ticket::all());
+        // if ($this->include('author')) {
+        //     return TicketResource::collection(Ticket::with('user')->get());
+        // }
+        // return TicketResource::collection(Ticket::all());
+
+        return TicketResource::collection(Ticket::filter($filters)->paginate());
     }
 
     /**
@@ -37,7 +43,11 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        return new TicketResource($ticket);
+        if ($this->include('author')) {
+            return new TicketResource($ticket->load('user'));
+        } else {
+            return new TicketResource($ticket);
+        }
     }
 
     /**

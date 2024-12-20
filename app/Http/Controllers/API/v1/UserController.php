@@ -2,20 +2,25 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\API\v1\APIController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\v1\StoreuserRequest;
 use App\Http\Requests\API\v1\UpdateuserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\user;
 
-class UserController extends Controller
+class UserController extends APIController
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return UserResource::collection(User::paginate());
+        if ($this->include('tickets')) {
+            return UserResource::collection(User::with('tickets')->paginate());
+        } else {
+            return UserResource::collection(User::paginate());
+        }
     }
 
 
@@ -32,7 +37,11 @@ class UserController extends Controller
      */
     public function show(user $user)
     {
-        return new UserResource($user);
+        if ($this->include('tickets')) {
+            return new UserResource($user->load('tickets'));
+        } else {
+            return new UserResource($user);
+        }
     }
 
     /**
