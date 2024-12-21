@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\API\v1\APIController;
 use App\Http\Controllers\Controller;
+use App\Http\Filters\v1\TicketFilters;
 use App\Http\Requests\API\v1\StoreuserRequest;
 use App\Http\Requests\API\v1\UpdateuserRequest;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\v1\TicketResource;
 use App\Models\user;
 
 class UserController extends APIController
@@ -22,6 +24,12 @@ class UserController extends APIController
             return UserResource::collection(User::paginate());
         }
     }
+
+    public function tickets($user_id, TicketFilters $filters)
+    {
+        return TicketResource::collection(User::find($user_id)->tickets()->filter($filters)->paginate());
+    }
+
 
 
     /**
