@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\API\v1\APIController;
-use App\Http\Controllers\Controller;
 use App\Http\Filters\v1\TicketFilters;
+use App\Http\Filters\v1\UserFilters;
 use App\Http\Requests\API\v1\StoreuserRequest;
 use App\Http\Requests\API\v1\UpdateuserRequest;
 use App\Http\Resources\UserResource;
@@ -16,12 +16,12 @@ class UserController extends APIController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(UserFilters $filters)
     {
         if ($this->include('tickets')) {
-            return UserResource::collection(User::with('tickets')->paginate());
+            return UserResource::collection(User::with('tickets')->filter($filters)->paginate());
         } else {
-            return UserResource::collection(User::paginate());
+            return UserResource::collection(User::filter($filters)->paginate());
         }
     }
 

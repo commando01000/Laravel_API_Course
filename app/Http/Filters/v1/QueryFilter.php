@@ -26,7 +26,6 @@ abstract class QueryFilter
 
     public function apply($builder)
     {
-
         $this->builder = $builder;
 
         foreach ($this->request->all() as $filter => $value) {
@@ -35,5 +34,21 @@ abstract class QueryFilter
             }
         }
         return $builder;
+    }
+
+    public function sortAsc($value)
+    {
+        $sortAttrs = explode(',', $value);
+        foreach ($sortAttrs as $sortAttr) {
+            $this->builder->orderBy($sortAttr, 'asc');
+        }
+    }
+
+    public function sortDesc($value)
+    {
+        $sortAttrs = explode(',', $value);
+        foreach ($sortAttrs as $sortAttr) {
+            $this->builder->orderBy($sortAttr, 'desc');
+        }
     }
 }
