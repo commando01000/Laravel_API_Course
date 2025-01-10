@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class APIController extends Controller
 {
-    public function include($relationships): bool
+    public function include($relationships)
     {
         $param = request()->input('include');
         if (!isset($param)) {
