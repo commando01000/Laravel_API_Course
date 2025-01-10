@@ -8,7 +8,9 @@ use App\Models\Ticket;
 use App\Http\Requests\API\v1\StoreTicketRequest;
 use App\Http\Requests\API\v1\UpdateTicketRequest;
 use App\Http\Resources\v1\TicketResource;
+use App\Models\User;
 use App\Traits\ApiResponses;
+use Exception;
 
 class TicketController extends APIController
 {
@@ -35,7 +37,21 @@ class TicketController extends APIController
      */
     public function store(StoreTicketRequest $request)
     {
-        //
+        try {
+            $user = User::findorFail($request->input('data.relationships.author.data.id'));
+
+            // Extract Attributes
+
+            $model = [
+                'user_id' => $user->id,
+                'title' => $request->input('data.attributes.title'),
+                'description' => $request->input('data.attributes.description'),
+                'status' => $request->input('data.attributes.status'),
+            ];
+            return $this->successResponse('Ticket created successfully', TicketResource::make(Ticket::create($model)), 201);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 404);
+        }
     }
 
     /**
