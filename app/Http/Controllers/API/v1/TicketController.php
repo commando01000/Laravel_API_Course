@@ -12,6 +12,7 @@ use App\Http\Resources\v1\TicketResource;
 use App\Models\User;
 use App\Traits\ApiResponses;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class TicketController extends APIController
 {
@@ -86,6 +87,10 @@ class TicketController extends APIController
     {
         try {
             $ticket = Ticket::findorFail($ticket_id);
+
+            // policy
+            $this->authorize('update', $ticket);
+
             $user = User::findorFail($request->input('data.relationships.author.data.id'));
             $ticket->user_id = $user->id;
             $ticket->title = $request->input('data.attributes.title');
